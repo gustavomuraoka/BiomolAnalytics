@@ -24,9 +24,11 @@ class DNASegment(Polynucleotyde):
                 translated_seq += self.translation_dict[nucleotide]
             return translated_seq
 
-        # Provide info when the sequence has a letter that shouldn't be part of a DNA sequence 
+        # Provide info when the sequence has a letter that shouldn't be part of a DNA sequence
         except KeyError:
-            print('Your sequence seem to have an error, please try again [Unrecognised nucleotide]')
+            for nucleotide in range(len(self.sequence)):
+                if self.sequence[nucleotide] != "A" and self.sequence[nucleotide] != "T" and self.sequence[nucleotide] != "C" and self.sequence[nucleotide] != "G":
+                    print(f'Your sequence seem to have an error, please try again [Position: {nucleotide} ({self.sequence[nucleotide]})]')
 
 
 # This class describe the RNA segment
@@ -39,16 +41,18 @@ class RNASegment(Polynucleotyde):
 
     # Simple way to translate RNA to DNA
     def RNA_to_DNA(self):
-        
+
         try:
             translated_seq = ""
             for nucleotide in self.sequence:
                 translated_seq += self.translation_dict[nucleotide]
             return translated_seq
 
-        # Provide info when the sequence has a letter that shouldn't be part of a RNA sequence 
+        # Provide info when the sequence has a letter that shouldn't be part of a RNA sequence
         except KeyError:
-            print('Your sequence seem to have an error, please try again [Unrecognised nucleotide]')
+            for nucleotide in range(len(self.sequence)):
+                if self.sequence[nucleotide] != "A" and self.sequence[nucleotide] != "U" and self.sequence[nucleotide] != "C" and self.sequence[nucleotide] != "G":
+                    print(f'Your sequence seem to have an error, please try again [Position: {nucleotide} ({self.sequence[nucleotide]})]')
 
 
 # This dictionary is useful when translating mRNA to Protein, having one-letter and three-letter codes, both being
@@ -139,4 +143,5 @@ while loop_control:
             protein = Protein(nucleotide_seq, False)
         else:
             print("Your sequence might have some error, check again")
+
     loop_control = False
