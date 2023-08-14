@@ -24,6 +24,7 @@ class DNASegment(Polynucleotyde):
                 translated_seq += self.translation_dict[nucleotide]
             return translated_seq
 
+        # Provide info when the sequence has a letter that shouldn't be part of a DNA sequence 
         except KeyError:
             print('Your sequence seem to have an error, please try again [Unrecognised nucleotide]')
 
@@ -38,13 +39,14 @@ class RNASegment(Polynucleotyde):
 
     # Simple way to translate RNA to DNA
     def RNA_to_DNA(self):
-
+        
         try:
             translated_seq = ""
             for nucleotide in self.sequence:
                 translated_seq += self.translation_dict[nucleotide]
             return translated_seq
 
+        # Provide info when the sequence has a letter that shouldn't be part of a RNA sequence 
         except KeyError:
             print('Your sequence seem to have an error, please try again [Unrecognised nucleotide]')
 
@@ -93,6 +95,7 @@ class Protein(DNASegment):
                     codon = ''
             return translation_result
 
+    # Codon is a 3-nucleotide lenght part of the polynucleotide that can be translated to an aminoacid due the tRNA activity. TODO: find a way to make it with all frames LOL
     def codon_to_amino(self, codon_seq):
         protein_list, protein_seq = [], ''
         for codon in codon_seq:
