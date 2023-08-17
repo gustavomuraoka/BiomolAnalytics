@@ -48,7 +48,7 @@ class RNASegment(Polynucleotyde):
                 translated_seq += self.translation_dict[nucleotide]
             return translated_seq
 
-        # Provide info when the sequence has a letter that shouldn't be part of a RNA sequence
+        # Provide info when the sequence has a letter that shouldn't be part of an RNA sequence
         except KeyError:
             for nucleotide in range(len(self.sequence)):
                 if self.sequence[nucleotide] != "A" and self.sequence[nucleotide] != "U" and self.sequence[nucleotide] != "C" and self.sequence[nucleotide] != "G":
@@ -82,34 +82,38 @@ class Protein(DNASegment):
         super().__init__(sequence)
         if is_DNA is True:
             self.sequence = super().DNA_to_RNA()
+        self.translation_dict = {"U": "A", "G": "C", "C": "G", "A": "U"}
 
     # This function translates the RNA to the protein primary structure, where you are able to set up
     # how you expect to deal with the frames, giving better perspectives on the sequence
     def nucleotide_to_protein(self):
-        protein_seq = ''
-        self.codon_to_amino(self.frame_setup(1))
+        chosen_frame = int(input("Which frame you want to use? (0 = All): "))
+        if chosen_frame > 0:
+            self.singleframe_setup(chosen_frame)
 
-    def frame_setup(self, selected_frame):
-        translation_result, codon = [], ''
-        if 0 < selected_frame < 4:
-            for nucleotide in range(len(self.sequence)):
-                codon += self.sequence[nucleotide]
-                if len(codon) == 3:
-                    translation_result.append(codon)
-                    codon = ''
-            return translation_result
+    def singleframe_setup(self, chosen_frame):
+        if 0 < chosen_frame < 4:
+            resultant_seq = self.sequence[chosen_frame-1:]
+            print(self.frame_toProtein_translation(resultant_seq))
+        else:
+            resultantseq = self.reversestrand_sequencer()[chosen_frame - 4:]
+            print(self.frame_toProtein_translation(resultantseq))
 
-    # Codon is a 3-nucleotide lenght part of the polynucleotide that can be translated to an aminoacid due the tRNA activity. TODO: find a way to make it with all frames LOL
-    def codon_to_amino(self, codon_seq):
-        protein_list, protein_seq = [], ''
-        for codon in codon_seq:
-            protein_list.append(codon_dict[codon][0])
-
-        for aminoacid in protein_list:
-            protein_seq += ' - ' + str(aminoacid)
-
-        print(protein_seq)
+    @staticmethod  # Remove this if needed anytime soon
+    def frame_toProtein_translation(self, sequence):
+        protein_seq, codon = "", ""
+        for nucleotide in sequence:
+            codon += nucleotide
+            if len(codon) == 3:
+                protein_seq += codon_dict[codon][0] + " - "
+                codon = ""
         return protein_seq
+
+    def reversestrand_sequencer(self):
+        reverse_strand = ""
+        for nucleotide in self.sequence:
+            reverse_strand += self.translation_dict[nucleotide]
+        return reverse_strand
 
 
 # This variable is responsible to control the program exec, making it stop whenever the user wants to
@@ -123,7 +127,7 @@ while loop_control:
           f'3. RNA/DNA -> Protein Translation')
     option_selected = int(input("Select: "))
 
-    # !! Atualizar pra uma versão mais inteligente (switch/match) quando possivel !!
+    # !! Atualizar pra uma versão mais inteligente (switch/match) quando possivel Python 3.9 nn dá pra usar match!!
     if option_selected == 1:
         DNA_seq = DNASegment(input("Insert your sequence: ").upper())
         print(f'mRNA output: {DNA_seq.DNA_to_RNA()}')
